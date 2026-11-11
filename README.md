@@ -143,15 +143,6 @@ Execute the comprehensive automated test suite, including security and core arch
 python -m unittest tests/run_tests.py
 ```
 
----
-
-## 🌐 GitHub Pages Live HUD
-
-The tactical command HUD can be hosted statically via GitHub Pages using the included GitHub Actions workflow (`.github/workflows/deploy-pages.yml`).
-
-1. Navigate to **Settings > Pages** on your GitHub repository.
-2. Under **Build and deployment > Source**, select **GitHub Actions**.
-3. Push to `main` to trigger the automated deployment of the static dashboard HUD.
 
 ---
 
