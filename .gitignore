@@ -1,0 +1,86 @@
+ÿþ# ==============================================================================
+# JARVIS Project .gitignore (Ponytail Pragmatic Senior Standard)
+# ==============================================================================
+
+# --- Sensitive Credentials & API Vaults (SEC-05---
+api_vault.json
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+*.pfx
+
+# --- Persistent Databases & Vector Stores ---
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+jarvis_memory.db
+chroma_db/
+chroma/
+
+# --- Autonomous Staging, Backups & Self-Modifier (SEC-02) ---
+.jarvis_backups/
+.jarvis_staging/
+.cora/
+
+# --- LLM Fine-Tuning, CPT Datasets & Model Weights (Bloat Prevention---
+data/training/
+lora_adapters/
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+Modelfile*
+
+# --- Python Bytecode & Environment ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Virtual Environments ---
+.venv/
+venv/
+ENV/
+env/
+
+# --- Testing, Coverage & Profiling ---
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# --- Logs & Hardware Captures ---
+*.log
+captures/
+recordings/
+screenshots/
+
+# --- OS & IDE Metadata ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

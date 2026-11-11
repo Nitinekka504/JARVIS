@@ -1,0 +1,47 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare Dashboard Static Assets
+        run: |
+          mkdir -p _site
+          cp -r dashboard/static/* _site/
+          # Ensure relative paths for seamless GitHub Pages hosting
+          sed -i 's|href="/static/style.css"|href="style.css"|g' _site/index.html _site/reports.html _site/training.html
+          sed -i 's|src="/static/app.js"|src="app.js"|g' _site/index.html
+          sed -i 's|href="/reports"|href="reports.html"|g' _site/index.html
+          sed -i 's|href="/training"|href="training.html"|g' _site/index.html
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

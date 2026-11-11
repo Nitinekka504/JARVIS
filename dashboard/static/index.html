@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE BATMAN • Gotham Tactical Command HUD</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Cinzel:ital,wght@1,600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+</head>
+<body>
+    <div class="bat-bg-watermark">
+        <svg viewBox="0 0 100 50" fill="currentColor">
+            <path d="M50 8 C45 2 38 0 32 4 C28 6 25 12 24 16 C20 12 14 12 8 16 C4 18 0 26 0 30 C0 36 6 42 16 40 C24 38 30 32 34 30 C38 34 44 42 50 48 C56 42 62 34 66 30 C70 32 76 38 84 40 C94 42 100 36 100 30 C100 26 96 18 92 16 C86 12 80 12 76 16 C75 12 72 6 68 4 C62 0 55 2 50 8 Z"/>
+        </svg>
+    </div>
+    <div class="hud-container">
+        <!-- Top Navigation Bar -->
+        <header class="hud-header">
+            <div class="logo-group">
+                <div class="bat-signal-box">
+                    <svg class="bat-signal-svg" viewBox="0 0 100 50">
+                        <path d="M50 8 C45 2 38 0 32 4 C28 6 25 12 24 16 C20 12 14 12 8 16 C4 18 0 26 0 30 C0 36 6 42 16 40 C24 38 30 32 34 30 C38 34 44 42 50 48 C56 42 62 34 66 30 C70 32 76 38 84 40 C94 42 100 36 100 30 C100 26 96 18 92 16 C86 12 80 12 76 16 C75 12 72 6 68 4 C62 0 55 2 50 8 Z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>THE BATMAN <span class="version-tag">CRIMSON HUD v2.0</span></h1>
+                    <span class="sub-header-tag">IT'S NOT JUST A CALL... IT'S A WARNING.</span>
+                </div>
+            </div>
+            <div class="persona-selector">
+                <button class="persona-btn active" data-persona="jarvis" id="btn-persona-jarvis">🦇 BATMAN</button>
+                <button class="persona-btn" data-persona="grok" id="btn-persona-grok">⚡ GROK</button>
+                <button class="persona-btn" data-persona="blended" id="btn-persona-blended">🛡️ ALFRED</button>
+                <button class="self-learning-btn" id="btn-self-learning" title="Click to toggle continuous internet self-learning mode">🧠 RECON LOOP: INACTIVE</button>
+                <a href="/reports" target="_blank" class="persona-btn" style="text-decoration:none; color: var(--primary-neon);" id="btn-reports" title="Open Research Reports Platform">📄 REPORTS</a>
+                <a href="/training" target="_blank" class="persona-btn" style="text-decoration:none; color: var(--success);" id="btn-training" title="Open Model Training Lab Platform">🔬 TRAINING LAB</a>
+            </div>
+            <div class="status-group">
+                <div class="status-badge" id="conn-status"><span class="dot"></span> GOTHAM GRID ACTIVE</div>
+                <div class="system-time" id="sys-time">00:00:00</div>
+            </div>
+        </header>
+
+        <!-- Main HUD Grid Layout -->
+        <main class="hud-grid">
+            
+            <!-- Card 1: Interactive Command Console & Chat Stream -->
+            <section class="hud-card chat-card full-width">
+                <div class="card-header">
+                    <h2><i class="icon">🦇</i> BATCOMPUTER TACTICAL CONSOLE & LOGS</h2>
+                    <span class="badge green" id="chat-status">READY FOR COMMANDS</span>
+                </div>
+                <div class="chat-history" id="chat-history">
+                    <div class="chat-message assistant">
+                        <span class="sender">BATCOMPUTER</span>
+                        <p>Batcomputer Core online, Sir. Gotham tactical HUD listening. You can speak via microphone or enter tactical commands below.</p>
+                    </div>
+                </div>
+                <div class="chat-input-bar">
+                    <button class="mic-btn" id="mic-btn" title="Click to speak via browser microphone">
+                        <span class="mic-icon">🎤</span>
+                        <span class="mic-label" id="mic-label">VOICE INPUT</span>
+                    </button>
+                    <input type="text" id="chat-input" placeholder="Enter tactical command (e.g. 'Check system health', 'audit ports', 'research quantum AI')..." autocomplete="off">
+                    <button class="send-btn" id="send-btn">SEND <span>➔</span></button>
+                </div>
+            </section>
+
+            <!-- Card 2: Audio Spectrum & Voice HUD -->
+            <section class="hud-card voice-card">
+                <div class="card-header">
+                    <h2><i class="icon">🎙️</i> BAT-COMM AUDIO SPECTRUM</h2>
+                    <span class="badge" id="voice-state">IDLE</span>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="audio-visualizer"></canvas>
+                </div>
+                <div class="transcript-preview">
+                    <span class="label">Latest Query:</span>
+                    <p id="latest-query">"Batcomputer Core online, standing by Sir."</p>
+                </div>
+            </section>
+
+            <!-- Card 3: Multimodal Vision Stream -->
+            <section class="hud-card vision-card">
+                <div class="card-header">
+                    <h2><i class="icon">🦇</i> BAT-VISION MULTIMODAL OVERLAY</h2>
+                    <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                        <button class="vision-btn active" id="btn-vision-screen" onclick="triggerVision('screen')">🖥️ Screen</button>
+                        <button class="vision-btn" id="btn-vision-webcam" onclick="triggerVision('webcam')">📷 Webcam</button>
+                        <button class="vision-btn" id="btn-vision-capture" onclick="captureSingleFrame()" title="Capture Single Frame">📸 Capture</button>
+                        <button class="vision-btn" id="btn-vision-live" onclick="toggleLiveVisionStream()" title="Toggle Continuous Live Video Feed">▶️ Continuous Live</button>
+                        <button class="vision-btn vision-stop-btn" id="btn-vision-stop" onclick="stopVisionFeed()" title="Stop all vision feeds">🛑 STOP FEED</button>
+                        <span class="badge" id="vision-mode">SCREEN FEED</span>
+                    </div>
+                </div>
+                <div class="vision-feed-container">
+                    <div class="frame-overlay" id="vision-overlay">
+                        <div class="scan-line"></div>
+                        <img id="vision-frame" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='420'><rect width='100%' height='100%' fill='%2308020a'/><text x='50%' y='48%' fill='%23cc1c1c' font-family='monospace' font-size='18' text-anchor='middle'>AWAITING BAT-VISION STREAM</text><text x='50%' y='56%' fill='%237a5a5a' font-family='monospace' font-size='12' text-anchor='middle'>SELECT SCREEN OR WEBCAM INPUT ABOVE</text></svg>" alt="Vision Stream">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 4: Real-Time Hardware Gauges -->
+            <section class="hud-card telemetry-card">
+                <div class="card-header">
+                    <h2><i class="icon">⚡</i> BATCAVE HARDWARE & POWER GAUGES</h2>
+                    <span class="badge green" id="port-status">SECURE</span>
+                </div>
+                <div class="gauges-grid">
+                    <div class="gauge-box">
+                        <div class="circle-gauge" id="cpu-gauge" style="--percent: 15;">
+                            <span class="gauge-value" id="cpu-val">15%</span>
+                        </div>
+                        <span class="gauge-label">CPU LOAD</span>
+                    </div>
+                    <div class="gauge-box">
+                        <div class="circle-gauge" id="ram-gauge" style="--percent: 42;">
+                            <span class="gauge-value" id="ram-val">42%</span>
+                        </div>
+                        <span class="gauge-label">RAM USAGE</span>
+                    </div>
+                    <div class="gauge-box">
+                        <div class="circle-gauge" id="disk-gauge" style="--percent: 28;">
+                            <span class="gauge-value" id="disk-val">28%</span>
+                        </div>
+                        <span class="gauge-label">DISK USAGE</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 5: Background Task Manager -->
+            <section class="hud-card tasks-card">
+                <div class="card-header">
+                    <h2><i class="icon">⏳</i> WAYNE TECH ASYNC TASK MANAGER</h2>
+                    <span class="badge" id="active-tasks-count">0 ACTIVE</span>
+                </div>
+                <div class="task-list" id="task-list">
+                    <div class="empty-state">No background tasks currently running.</div>
+                </div>
+            </section>
+
+            <!-- Card 6: Self-Modification Code Diff Viewer -->
+            <section class="hud-card diff-card">
+                <div class="card-header">
+                    <h2><i class="icon">🛠️</i> BAT-SUIT CODE DIFF VIEWER</h2>
+                    <span class="badge yellow" id="diff-status">NO PROPOSED DIFF</span>
+                </div>
+                <div class="diff-viewer" id="diff-content">
+                    <div class="diff-placeholder">No self-modification patch currently pending review.</div>
+                </div>
+            </section>
+
+            <!-- Card 7: Searchable Quad-Tier Memory Browser -->
+            <section class="hud-card memory-card">
+                <div class="card-header">
+                    <h2><i class="icon">📁</i> BAT-ARCHIVES MEMORY BROWSER</h2>
+                    <input type="text" id="memory-search" placeholder="Search memory records...">
+                </div>
+                <div class="memory-tabs">
+                    <button class="tab-btn active" data-tab="short_term">Short-Term</button>
+                    <button class="tab-btn" data-tab="reflexive">Reflexive Lessons</button>
+                    <button class="tab-btn" data-tab="acquired">Acquired Knowledge</button>
+                    <button class="tab-btn" data-tab="user_profile">User Profile</button>
+                </div>
+                <div class="memory-content" id="memory-content-box">
+                    <div class="memory-item">
+                        <span class="tag">USER PROFILE</span>
+                        <p><strong>user_address:</strong> "Sir"</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 8: API Key Inventory & Quota Inspector -->
+            <section class="hud-card api-vault-card">
+                <div class="card-header">
+                    <h2><i class="icon">🔑</i> WAYNE ENTERPRISES API VAULT</h2>
+                    <span class="badge green" id="vault-summary-badge">429 AUTO-FAILOVER ACTIVE</span>
+                </div>
+                <div class="api-providers-grid" id="api-vault-grid">
+                    <div class="empty-state">Loading connected API provider keys...</div>
+                </div>
+            </section>
+
+            <!-- Card 9: Autonomous Internet Self-Learning Inspector -->
+            <section class="hud-card self-learning-card">
+                <div class="card-header">
+                    <h2><i class="icon">🌐</i> GOTHAM INTELLIGENCE RECON ENGINE</h2>
+                    <span class="badge" id="learning-status-badge">IDLE</span>
+                </div>
+                <div class="learning-details">
+                    <div class="topic-ticker">
+                        <span class="label">Research Topic:</span>
+                        <span class="value" id="learning-topic">"Click Self-Learning toggle or speak 'Activate self learning' to start."</span>
+                    </div>
+                    <div class="progress-bar-bg" style="margin: 0.8rem 0;">
+                        <div class="progress-bar-fill emerald" id="learning-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="learning-meta" style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                        <span>Articles Scraped: <strong id="pages-scraped-val" style="color: var(--primary-neon);">0</strong></span>
+                        <span>Acquired Vector Records: <strong id="total-records-val" style="color: #10b981;">0</strong></span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# Centralized Configuration for JARVIS Autonomous AI Assistant
+
+system:
+  name: "JARVIS"
+  version: "1.0.0"
+  persona_tone: "Refined, highly competent, concise, calm, and subtly witty"
+  user_address: "Sir"
+  worker_threads: 4
+
+models:
+  primary_reasoning: "claude-3-5-sonnet-20241022"
+  fallback_reasoning: "gpt-4o"
+  vision_model: "gpt-4o"
+  local_ollama_model: "llama3"
+  temperature: 0.2
+
+api_keys:
+  openai_api_key: "${OPENAI_API_KEY}"
+  anthropic_api_key: "${ANTHROPIC_API_KEY}"
+  elevenlabs_api_key: "${ELEVENLABS_API_KEY}"
+  deepgram_api_key: "${DEEPGRAM_API_KEY}"
+  picovoice_access_key: "${PICOVOICE_ACCESS_KEY}"
+
+memory:
+  sqlite_path: "jarvis_memory.db"
+  chroma_db_path: "./chroma_db"
+  short_term_max_turns: 20
+  embedding_model: "all-MiniLM-L6-v2"
+
+audio:
+  wake_word: "jarvis"
+  stt_provider: "whisper"  # options: whisper, deepgram, stdin
+  tts_provider: "console"  # options: elevenlabs, piper, pyttsx3, console
+  tts_voice_id: "21m00Tcm4TlvDq8ikWAM"
+  speech_rate: 1.0
+  fallback_to_cli: true
+
+vision:
+  camera_index: 0
+  capture_fps: 1.0
+  image_quality: 85
+  max_image_dimension: 1024
+
+watchdog:
+  check_interval_seconds: 300
+  cpu_threshold_percent: 85.0
+  ram_threshold_percent: 85.0
+  disk_threshold_percent: 90.0
+  suspicious_process_names:
+    - "malware_test.exe"
+    - "crypto_miner"
+  alert_on_new_open_ports: true
+
+mcp:
+  enabled: true
+  servers:
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem", "./"]
