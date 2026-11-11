@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/social_preview.svg" alt="J.A.R.V.I.S. Social Preview" width="100%">
+</p>
+
 # 🦇 J.A.R.V.I.S. • Autonomous Voice-Driven Multi-Modal AI System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-crimson.svg)](LICENSE)
@@ -149,3 +153,4 @@ python -m unittest tests/run_tests.py
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
